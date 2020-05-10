@@ -1,7 +1,9 @@
 # Interactive script runner for npm
 
 - Too many scripts inside your package.json?
-- Use `npm-scripts` or `ns` CLI for [fuzzy](https://github.com/mattyork/fuzzy) search
+- Use `npm-scripts` or `ns` CLI for [fuzzy](https://github.com/mattyork/fuzzy) ordered search
+
+<p align="center"><img src="./screencast/demo.gif"/></p>
 
 ## Installation
 

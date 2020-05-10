@@ -10,7 +10,7 @@ inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
 
 function promptUser(err, data) {
   // Collect scripts
-  const scriptNames = Object.keys(data.scripts);
+  const scriptNames = Object.keys(data.scripts).sort((a, b) => a.localeCompare(b));
 
   // Prompt user
   inquirer
