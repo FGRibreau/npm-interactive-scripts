@@ -6,17 +6,20 @@ const fuzzy = require("fuzzy");
 const spawn = require("child_process").spawnSync;
 const npm = require("npm");
 
+const argv = require('minimist')(process.argv.slice(2));
+const isVerbose = argv.v || argv.verbose;
+
 const inquirer = require("inquirer");
 inquirer.registerPrompt(
   "autocomplete",
   require("inquirer-autocomplete-prompt")
 );
 
-function promptUser(err, data) {
+function promptUser(err, data, verbose = false) {
   // Collect scripts
-  const scriptNames = Object.keys(data.scripts).sort((a, b) =>
-    a.localeCompare(b)
-  );
+  const scripts = Object.entries(data.scripts)
+    .map(([name, body]) => verbose ? `${name}\t\t${body}` : name)
+    .sort((a, b) => a.localeCompare(b));
 
   // Prompt user
   inquirer
@@ -27,7 +30,7 @@ function promptUser(err, data) {
       message: "Script to run",
       source: (_, input) =>
         Promise.resolve(
-          fuzzy.filter(input || "", scriptNames).map(el => el.original)
+          fuzzy.filter(input || "", scripts).map(el => el.original)
         )
     })
     .then(run)
@@ -38,4 +41,4 @@ function run(val) {
   npm.load(() => npm.run(val.script));
 }
 
-promptUser(null, require(path.join(process.cwd(), "package.json")));
+promptUser(null, require(path.join(process.cwd(), "package.json")), isVerbose);
